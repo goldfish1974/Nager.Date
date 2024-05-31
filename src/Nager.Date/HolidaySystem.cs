@@ -2,7 +2,6 @@ using Nager.Date.Helpers;
 using Nager.Date.HolidayProviders;
 using Nager.Date.Models;
 using Nager.Date.ReligiousProviders;
-using Nager.LicenseSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -141,40 +140,6 @@ namespace Nager.Date
                 { CountryCode.ZW, new Lazy<IHolidayProvider>(() => new ZimbabweHolidayProvider(_catholicProvider))}
             };
 
-        private static bool? _licenseValid;
-
-        /// <summary>
-        /// License Key
-        /// </summary>
-        /// <remarks>
-        /// As a GitHub sponsor of <see href="https://github.com/nager">nager</see>, you will receive a <see href="https://github.com/sponsors/nager">license key</see>
-        /// </remarks>
-        public static string LicenseKey = null;
-
-        private static void CheckLicense(string licenseKey)
-        {
-            if (string.IsNullOrEmpty(licenseKey))
-            {
-                _licenseValid = false;
-                throw new LicenseKeyException("No LicenseKey");
-            }
-
-            var licenseInfo = LicenseHelper.CheckLicenseKey(licenseKey);
-            if (licenseInfo is null)
-            {
-                _licenseValid = false;
-                throw new LicenseKeyException("Invalid LicenseKey");
-            }
-
-            if (licenseInfo.ValidUntil < DateTime.Today)
-            {
-                _licenseValid = false;
-                throw new LicenseKeyException("Expried LicenseKey");
-            }
-
-            _licenseValid = true;
-        }
-
         /// <summary>
         /// Get the holiday provider for the specified country
         /// </summary>
@@ -211,17 +176,6 @@ namespace Nager.Date
         /// <returns></returns>
         public static bool TryGetHolidayProvider(CountryCode countryCode, out IHolidayProvider holidayProvider)
         {
-            if (_licenseValid is null)
-            {
-                CheckLicense(LicenseKey);
-            }
-
-            if (!_licenseValid.Value)
-            {
-                holidayProvider = NoHolidaysHolidayProvider.Instance;
-                return false;
-            }
-
             if (_holidaysProviders.TryGetValue(countryCode, out var provider))
             {
                 holidayProvider = provider.Value;

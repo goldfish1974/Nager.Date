@@ -27,6 +27,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Helpers\LicenseHelper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\..\LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
   </ItemGroup>
 
@@ -40,10 +44,6 @@
     <!-- This makes it possible for the architecture tests themselves to be performed internally.  -->
     <InternalsVisibleTo Include="Nager.Date.ArchitectureTest" />
     <InternalsVisibleTo Include="Nager.Date.UnitTest" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Nager.LicenseSystem" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
